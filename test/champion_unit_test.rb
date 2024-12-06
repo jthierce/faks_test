@@ -20,6 +20,18 @@ describe Champion do
 
     it 'the error is column missed' do
     end
+
+    it 'the error is invalid csv' do
+    end
+
+    it 'the error is missing headers' do
+    end
+
+    it 'the error is wrong data in elo column' do
+    end
+
+    it 'the error is wrong data in age column' do
+    end
   end
 
   describe 'Good files' do
