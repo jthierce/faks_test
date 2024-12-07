@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'lib/parser'
-require_relative 'lib/player'
+require_relative 'lib/players_table'
 require 'csv'
 require 'debug'
 
@@ -22,7 +22,9 @@ rescue StandardError => e
 end
 
 begin
-  players = Player.new({ csv: csv })
+  players = PlayersTable.new({ csv: csv })
 rescue CSV::MalformedCSVError => _e
   exit
 end
+
+champions = players.find_champions
