@@ -1,6 +1,11 @@
 # faks_test
 Faks technical test
 
+# Usage
+ruby main.rb --help
+You can find file for test in the folder players_files
+You can use the script in script/generate_players_files.rb for create players_files with many players line. ex: ruby script/generate_players_files.rb 6000
+
 # The statement
 tu as une liste de joueurs d'échecs avec leurs ages et scores (elo).
 tu dois extraire de la liste les "champions"
