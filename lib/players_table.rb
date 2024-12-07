@@ -2,34 +2,45 @@
 
 require_relative '../config/variables'
 
+class PlayersTableError < StandardError; end
+
 # changer le nom en PlayerTable
 class PlayersTable
   INTEGER_HEADERS = %w[age elo].freeze
 
-  attr_reader :players
+  attr_reader :players, :champions
 
   def initialize(args)
     @players = args[:csv]
+    @champions = []
     verify_and_transform_data
     group_by_age_sort_by_elo
   end
 
   def find_champions
     max_elo = 0
-    champions = []
 
     @players.each do |age, players_by_age|
       current_age = age
       if players_by_age.first['elo'] > max_elo
         max_elo = players_by_age.first['elo']
-        champions << players_by_age.shift
+        @champions << players_by_age.shift
       end
       players_by_age.each do |player|
         break if player['elo'] != max_elo
-        champions << player
+        @champions << player
       end
     end
-    champions
+    @champions
+  end
+
+  def display_champions
+    format_champions = []
+    format_champions << @champions.first.headers.join(', ')
+    @champions.each do |champion|
+      format_champions << champion.fields.join(', ')
+    end
+    format_champions.join("\n")
   end
 
   private
@@ -40,7 +51,7 @@ class PlayersTable
     end
     unless headers_valid
       warn 'Invalid headers'
-      raise CSV::MalformedCSVError.new('Invalid headers')
+      raise PlayersTableError.new('Invalid headers')
     end
 
     @players = @players.map do |player|
@@ -48,12 +59,12 @@ class PlayersTable
 
       if player['age'] > Config::Variables::OLDER_AGE || player['age'] < Config::Variables::YOUNGEST_AGE
         warn "Player #{player['name']} has an invalid age"
-        raise CSV::MalformedCSVError.new('Invalid age')
+        raise PlayersTableError.new('Invalid age')
       end
 
       if player['elo'] < Config::Variables::MINIMUM_ELO
         warn "Player #{player['name']} has an invalid elo. (Too low)"
-        raise CSV::MalformedCSVError.new('Invalid elo')
+        raise PlayersTableError.new('Invalid elo')
       end
       player
     end
@@ -62,9 +73,9 @@ class PlayersTable
   def transform_integer_column(player)
     INTEGER_HEADERS.each do |integer_header|
       player[integer_header] = Integer(player[integer_header])
-    rescue ArgumentError => _e
-      warn "Player #{player['name']} has an invald data in #{integer_header}"
-      raise CSV::MalformedCSVError.new("Invalid data in #{integer_header}")
+    rescue StandardError => _e
+      warn "Player #{player['name']} has an invalid data in #{integer_header}"
+      raise PlayersTableError.new("Invalid data in #{integer_header}")
     end
     player
   end

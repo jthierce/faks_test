@@ -10,7 +10,7 @@ class Parser
       opts.banner = 'Usage: main.rb [options] FILE_PATH'
 
       opts.on('-o', '--output', 'Display result directly on stardard input') do
-        args['output'] = true
+        args[:output] = true
       end
 
       opts.on('-h', '--help', 'Prints this help') do

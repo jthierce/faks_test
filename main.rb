@@ -4,6 +4,7 @@ require_relative 'lib/parser'
 require_relative 'lib/players_table'
 require 'csv'
 require 'debug'
+require 'fileutils'
 
 parser = Parser.parse(ARGV)
 file_path = ARGV.shift
@@ -21,10 +22,26 @@ rescue StandardError => e
   exit
 end
 
+csv.each do |row|
+  if row.fields.compact.size != row.headers.size
+    warn "Invalid size row detected: #{row.inspect}"
+    exit
+  end
+end
+
 begin
   players = PlayersTable.new({ csv: csv })
-rescue CSV::MalformedCSVError => _e
+rescue PlayersTableError => _e
   exit
 end
 
-champions = players.find_champions
+players.find_champions
+if (parser[:output])
+  puts players.display_champions
+else
+  FileUtils.mkdir_p('champions')
+  file = File.open("champions/#{Time.now}", 'w')
+  file.puts(players.display_champions)
+  file.close
+end
+
