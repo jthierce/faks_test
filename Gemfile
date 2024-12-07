@@ -7,5 +7,5 @@ group :development do
 end
 
 group :test do
-  gem 'minitest', '~> 5.25', '>= 5.25.3'
+  gem 'rspec-rails', '~> 7.0.0'
 end
