@@ -6,6 +6,7 @@ require_relative '../lib/players_table'
 
 describe 'Global test' do
   PLAYERS_FILE_PATH = 'players_files'
+  FIXTURES_FILE_PATH = 'spec/fixtures/results'
 
   describe 'when input is invalid' do
     # make a test when launch the programm with invalid file_path
@@ -97,27 +98,60 @@ describe 'Global test' do
 
   describe 'Good files' do
     it 'get all champions on a simple file' do
-      csv = CSV.read("#{PLAYERS_FILE_PATH}/basic_player.csv", headers: true, header_converters: :downcase)
-      player_table = PlayerTable.new({ csv: csv })
-      expect(player_table.find_champions).to match(//)
+      file_name = 'basic_players.csv'
+      csv = CSV.read("#{PLAYERS_FILE_PATH}/#{file_name}", headers: true, header_converters: :downcase)
+      player_table = PlayersTable.new({ csv: csv })
+      player_table.find_champions
+      file = File.open("#{FIXTURES_FILE_PATH}/#{file_name}")
+      expect(player_table.display_champions).to eq(file.read)
+      file.close
     end
 
     it 'return nothing when the file is empty' do
+      file_name = 'empty_players.csv'
+      csv = CSV.read("#{PLAYERS_FILE_PATH}/#{file_name}", headers: true, header_converters: :downcase)
+      player_table = PlayersTable.new({ csv: csv })
+      expect(player_table.display_champions).to eq('')
     end
 
     it 'get all champions with files with more columns' do
+      file_name = 'more_columns.csv'
+      csv = CSV.read("#{PLAYERS_FILE_PATH}/#{file_name}", headers: true, header_converters: :downcase)
+      player_table = PlayersTable.new({ csv: csv })
+      player_table.find_champions
+      file = File.open("#{FIXTURES_FILE_PATH}/#{file_name}")
+      expect(player_table.display_champions).to eq(file.read)
+      file.close
     end
 
     it 'get all champions with people equality' do
+      file_name = 'tied_player.csv'
+      csv = CSV.read("#{PLAYERS_FILE_PATH}/#{file_name}", headers: true, header_converters: :downcase)
+      player_table = PlayersTable.new({ csv: csv })
+      player_table.find_champions
+      file = File.open("#{FIXTURES_FILE_PATH}/#{file_name}")
+      expect(player_table.display_champions).to eq(file.read)
+      file.close
     end
 
     it 'get all champions with same elo but younger player' do
+      file_name = 'same_elo_but_younger_player.csv'
+      csv = CSV.read("#{PLAYERS_FILE_PATH}/#{file_name}", headers: true, header_converters: :downcase)
+      player_table = PlayersTable.new({ csv: csv })
+      player_table.find_champions
+      file = File.open("#{FIXTURES_FILE_PATH}/#{file_name}")
+      expect(player_table.display_champions).to eq(file.read)
+      file.close
     end
 
     it 'get all champions with same age but higher elo' do
-    end
-
-    it 'get all champions withe same age and elo' do
+      file_name = 'same_age_but_higher_elo.csv'
+      csv = CSV.read("#{PLAYERS_FILE_PATH}/#{file_name}", headers: true, header_converters: :downcase)
+      player_table = PlayersTable.new({ csv: csv })
+      player_table.find_champions
+      file = File.open("#{FIXTURES_FILE_PATH}/#{file_name}")
+      expect(player_table.display_champions).to eq(file.read)
+      file.close
     end
   end
 end

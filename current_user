@@ -1,3 +1,0 @@
-current_user
-if (compared_user.elo > current_user.elo && compared_user.age <= current_user.age) || (compared_user.age < current_user.age && compared_user.elo >= current_user.elo)
-  current_user pas champion

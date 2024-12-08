@@ -21,20 +21,22 @@ class PlayersTable
     max_elo = 0
 
     @players.each do |age, players_by_age|
-      current_age = age
       if players_by_age.first['elo'] > max_elo
         max_elo = players_by_age.first['elo']
         @champions << players_by_age.shift
-      end
-      players_by_age.each do |player|
-        break if player['elo'] != max_elo
-        @champions << player
+
+        players_by_age.each do |player|
+          break if player['elo'] != max_elo
+          @champions << player
+        end
       end
     end
     @champions
   end
 
   def display_champions
+    return '' if @champions.empty?
+
     format_champions = []
     format_champions << @champions.first.headers.join(', ')
     @champions.each do |champion|
@@ -47,7 +49,7 @@ class PlayersTable
 
   def verify_and_transform_data
     headers_valid = Config::Variables::MANDATORY_HEADERS.all? do |mandatory_header|
-      @players.first.headers.include?(mandatory_header)
+      @players.headers.include?(mandatory_header)
     end
     unless headers_valid
       warn 'Invalid headers'
