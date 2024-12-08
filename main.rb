@@ -7,6 +7,8 @@ require 'debug'
 require 'fileutils'
 
 class Main
+  attr_reader :parser
+
   def initialize standard_arguments
     @parser = Parser.parse(standard_arguments)
     @file_path = standard_arguments.shift
@@ -20,22 +22,21 @@ class Main
   end
 
   def read_csv
-    CSV.read(file_path, headers: true, header_converters: :downcase)
+    CSV.read(@file_path, headers: true, header_converters: :downcase)
     rescue StandardError => e
       raise e unless e.to_s.match(/No such file or directory/)
 
       warn 'Invalid file path'
       exit
-    end
   end
 
-  def csv_is_valid?(csv)
+  def csv_is_valid(csv)
     csv.each do |row|
       if row.fields.compact.size != row.headers.size
-        return false
+        warn "Invalid size row detected: #{row.inspect}"
+        exit
       end
     end
-    true
   end
 end
 
@@ -44,11 +45,7 @@ main = Main.new(ARGV)
 # Depending on what needed, but can add a parsing file to tranform a file to a csv
 main.parse_file_to_csv
 csv = main.read_csv
-
-unless main.csv_is_valid? csv
-  warn "Invalid size row detected: #{row.inspect}"
-  exit
-end
+main.csv_is_valid csv
 
 begin
   players = PlayersTable.new({ csv: csv })
@@ -57,7 +54,7 @@ rescue PlayersTableError => _e
 end
 
 players.find_champions
-if (parser[:output])
+if (main.parser[:output])
   puts players.display_champions
 else
   FileUtils.mkdir_p('champions')
