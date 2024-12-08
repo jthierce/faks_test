@@ -5,6 +5,7 @@ require_relative 'lib/players_table'
 require 'csv'
 require 'debug'
 require 'fileutils'
+require 'benchmark'
 
 class Main
   attr_reader :parser
@@ -40,20 +41,36 @@ class Main
   end
 end
 
-main = Main.new(ARGV)
+main = nil
+players = nil
+csv = nil
+Benchmark.bm do |x|
+  x.report('Initialize main') {
+    # The initialization of main retrieves the arguments passed when launching the script,
+    # parses them, and checks if the file_path is valid.
+    main = Main.new(ARGV)
+  }
 
-# Depending on what needed, but can add a parsing file to tranform a file to a csv
-main.parse_file_to_csv
-csv = main.read_csv
-main.csv_is_valid csv
+  x.report('parse_read_check_invalid_csv') {
+    # Depending on the requirements, a parsing function can be added to transform a file into a CSV format.
+    main.parse_file_to_csv
+    csv = main.read_csv
+    main.csv_is_valid csv
+  }
 
-begin
-  players = PlayersTable.new({ csv: csv })
-rescue PlayersTableError => _e
-  exit
+  x.report('Initialize PlayersTable') {
+  begin
+    players = PlayersTable.new({ csv: csv })
+  rescue PlayersTableError => _e
+    exit
+  end
+  }
+
+  x.report('Find champions') {
+    players.find_champions
+  }
 end
 
-players.find_champions
 if (main.parser[:output])
   puts players.display_champions
 else
