@@ -6,27 +6,48 @@ require 'csv'
 require 'debug'
 require 'fileutils'
 
-parser = Parser.parse(ARGV)
-file_path = ARGV.shift
+class Main
+  def initialize standard_arguments
+    @parser = Parser.parse(standard_arguments)
+    @file_path = standard_arguments.shift
+    if @file_path.empty?
+      warn 'You need to provide a file path as an argument.'
+      exit
+    end
+  end
 
-warn 'You need to provide a file path as an argument.' if file_path.empty?
+  def parse_file_to_csv
+  end
 
-# Depending on what needed, but can add a parsing file to tranform a file to a csv
+  def read_csv
+    CSV.read(file_path, headers: true, header_converters: :downcase)
+    rescue StandardError => e
+      raise e unless e.to_s.match(/No such file or directory/)
 
-begin
-  csv = CSV.read(file_path, headers: true, header_converters: :downcase)
-rescue StandardError => e
-  raise e unless e.to_s.match(/No such file or directory/)
+      warn 'Invalid file path'
+      exit
+    end
+  end
 
-  warn 'Invalid file path'
-  exit
+  def csv_is_valid?(csv)
+    csv.each do |row|
+      if row.fields.compact.size != row.headers.size
+        return false
+      end
+    end
+    true
+  end
 end
 
-csv.each do |row|
-  if row.fields.compact.size != row.headers.size
-    warn "Invalid size row detected: #{row.inspect}"
-    exit
-  end
+main = Main.new(ARGV)
+
+# Depending on what needed, but can add a parsing file to tranform a file to a csv
+main.parse_file_to_csv
+csv = main.read_csv
+
+unless main.csv_is_valid? csv
+  warn "Invalid size row detected: #{row.inspect}"
+  exit
 end
 
 begin
