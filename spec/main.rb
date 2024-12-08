@@ -52,7 +52,7 @@ describe 'Global test' do
         PlayersTable.new({ csv: csv })
       end.to raise_error(PlayersTableError)
       $stderr.rewind
-      expect($stderr.string.chomp).to eq("Invalid headers")
+      expect($stderr.string.chomp).to eq("Missing headers: elo")
     end
 
     it 'the error is invalid csv' do
@@ -70,7 +70,7 @@ describe 'Global test' do
         PlayersTable.new({ csv: csv })
       end.to raise_error(PlayersTableError)
       $stderr.rewind
-      expect($stderr.string.chomp).to eq("Invalid headers")
+      expect($stderr.string.chomp).to eq("Missing headers: age, elo, name")
     end
 
     it 'the error is wrong data in elo column' do

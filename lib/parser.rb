@@ -9,7 +9,7 @@ class Parser
     opt_parser = OptionParser.new do |opts|
       opts.banner = 'Usage: main.rb [options] FILE_PATH'
 
-      opts.on('-o', '--output', 'Display result directly on stardard input') do
+      opts.on('-o', '--output', 'Display result directly on stardard output') do
         args[:output] = true
       end
 

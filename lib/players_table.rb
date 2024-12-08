@@ -10,11 +10,14 @@ class PlayersTable
 
   attr_reader :players, :champions
 
+  # Initializes PlayersTable to validate if there are any invalid data in the CSV,
+  # transforms specific columns into integers, sorts the players first by age and then by ELO,
+  # and groups them by age to create an array that is easy to use for finding champions.
   def initialize(args)
     @players = args[:csv]
     @champions = []
     verify_and_transform_data
-    group_by_age_sort_by_elo
+    sort_and_group_players_by_age_and_elo
   end
 
   def find_champions
@@ -37,37 +40,50 @@ class PlayersTable
   def display_champions
     return '' if @champions.empty?
 
-    format_champions = []
-    format_champions << @champions.first.headers.join(', ')
-    @champions.each do |champion|
-      format_champions << champion.fields.join(', ')
+    headers = @champions.first.headers.join(', ')
+    rows = @champions.map do |champion|
+      champion.fields(', ')
     end
-    format_champions.join("\n")
+    ([headers] + rows).join("\n")
   end
 
   private
 
+  def validate_player(player)
+    validate_age(player)
+    validate_elo(player)
+  end
+  
+  def validate_age(player)
+    if player['age'] > Config::Variables::MAX_AGE || player['age'] < Config::Variables::MIN_AGE
+      warn "Player #{player['name']} has an invalid age"
+      raise PlayersTableError.new('Invalid age')
+    end
+  end
+  
+  def validate_elo(player)
+    if player['elo'] < Config::Variables::MINIMUM_ELO
+      warn "Player #{player['name']} has an invalid elo. (Too low)"
+      raise PlayersTableError.new('Invalid elo')
+    end
+  end
+
+  def validate_headers
+    missing_headers = Config::Variables::MANDATORY_HEADERS.reject do |header|
+      @players.headers.include?(header)
+    end
+    unless missing_headers.empty?
+      warn "Missing headers: #{missing_headers.join(', ')}"
+      raise PlayersTableError.new("Missing headers: #{missing_headers.join(', ')}")
+    end
+  end
+
   def verify_and_transform_data
-    headers_valid = Config::Variables::MANDATORY_HEADERS.all? do |mandatory_header|
-      @players.headers.include?(mandatory_header)
-    end
-    unless headers_valid
-      warn 'Invalid headers'
-      raise PlayersTableError.new('Invalid headers')
-    end
+    validate_headers
 
     @players = @players.map do |player|
       player = transform_integer_column(player)
-
-      if player['age'] > Config::Variables::OLDER_AGE || player['age'] < Config::Variables::YOUNGEST_AGE
-        warn "Player #{player['name']} has an invalid age"
-        raise PlayersTableError.new('Invalid age')
-      end
-
-      if player['elo'] < Config::Variables::MINIMUM_ELO
-        warn "Player #{player['name']} has an invalid elo. (Too low)"
-        raise PlayersTableError.new('Invalid elo')
-      end
+      validate_player(player)
       player
     end
   end
@@ -82,7 +98,7 @@ class PlayersTable
     player
   end
 
-  def group_by_age_sort_by_elo
+  def sort_and_group_players_by_age_and_elo
     @players.sort_by! do |player|
       [player['age'], -player['elo']]
     end
