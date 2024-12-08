@@ -123,6 +123,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  benchmark
   debug (>= 1.0.0)
   rspec-rails (~> 7.0.0)
 

@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 group :development do
   gem 'debug', '>= 1.0.0'
+  gem 'benchmark'
 end
 
 group :test do
