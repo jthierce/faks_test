@@ -40,11 +40,12 @@ class PlayersTable
   def display_champions
     return '' if @champions.empty?
 
-    headers = @champions.first.headers.join(', ')
-    rows = @champions.map do |champion|
-      champion.fields(', ')
+    format_champions = []
+    format_champions << @champions.first.headers.join(', ')
+    @champions.each do |champion|
+      format_champions << champion.fields.join(', ')
     end
-    ([headers] + rows).join("\n")
+    format_champions.join("\n")
   end
 
   private
