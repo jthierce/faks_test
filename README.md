@@ -2,11 +2,13 @@
 Faks technical test
 
 # Usage
-ruby main.rb --help
+`ruby main.rb --help`
 
 You can find file for test in the folder players_files
 
-You can use the script in script/generate_players_files.rb for create players_files with many players line. ex: ruby script/generate_players_files.rb 6000
+You can use the script in script/generate_players_files.rb for create players_files with many players line. ex: `ruby script/generate_players_files.rb 6000`
+
+You can launch spec with `rspec spec/main.rb`
 
 # The statement
 tu as une liste de joueurs d'échecs avec leurs ages et scores (elo).
