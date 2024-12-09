@@ -37,3 +37,25 @@ Next, I group the players by age.
 This allows me to iterate over the array of players by age and retrieve the player with the highest ELO for each age group (I also check if multiple players have the same highest ELO and include all such players for their age group).
   
 Finally, I print the result.
+
+## Another logic
+
+# 1
+During data verification, I could have checked if the players were champions. d
+
+This approach would have worked, but the issue is that each time I progress through the players list, if I find a younger and stronger player, I would have to loop through the temporary champions list again. 
+
+To handle this, I could have used a hash with the age as the key and the maximum elo for that age as the value.
+
+# 2
+An alternative approach I considered was as follows:
+
+1. **Identify the Maximum Elo per Age Group**: First, find the maximum Elo value for each age group in the player data. Once the highest Elo for a given age is determined, eliminate players who are older than the youngest player with that maximum Elo. These older players are no longer relevant for comparison and can be excluded from further checks.
+
+2. **Sort Players by Age**: After filtering out the irrelevant players, sort the remaining players by age. 
+
+3. **Iterate and Track the Maximum Elo**: Iterate over the players from the youngest to the oldest age. For each age group, compare the players and keep track of the highest Elo seen during each iteration.
+
+4. **Identify Champions**: By maintaining a "buffer" of the maximum Elo value seen, it becomes easy to check if a player qualifies as a champion, without needing to recheck players from older age groups.
+
+This approach reduces unnecessary comparisons and helps focus on the relevant subset of players, optimizing the process.
