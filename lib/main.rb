@@ -4,7 +4,6 @@ require_relative 'parser'
 require_relative 'players_table'
 require 'csv'
 require 'fileutils'
-require 'benchmark'
 
 class MainError < StandardError;end
 
@@ -51,7 +50,7 @@ class Main
     csv.each do |row|
       if row.fields.compact.size != row.headers.size
         warn "Invalid size row detected: #{row.inspect}"
-        MainError.new('Invalid size row')
+        raise MainError.new('Invalid size row')
       end
     end
   end
