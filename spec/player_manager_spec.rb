@@ -6,11 +6,11 @@ require_relative '../lib/player_manager'
 describe PlayerManager do
   let(:players_file_path) { 'players_files' }
 
-  describe 'load_players' do
+  describe '.load_players' do
     let(:csv) { CSV.read("#{players_file_path}/#{file_name}", headers: true, header_converters: :downcase) }
     let(:player_manager) { PlayerManager.new(csv) }
 
-    context 'input is a csv player' do
+    context 'with a csv player' do
         let(:file_name) { 'basic_players.csv' }
 
       it 'return a array of instance player class' do
