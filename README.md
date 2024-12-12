@@ -27,6 +27,15 @@ On attachera une importance particulière aux points suivants:
 - La performance: Comment se comporte l'algorithme à mesure que le nombre de joueurs grandit ?
 - La clarté et la lisibilité du code
 
+# Ways to improve the code
+Remove CSV-specific references to make the code more generic. Create a helper to transform any data type into a generic format.
+
+Initially, I used metaprogramming to create the valid_elo and valid_age methods in the Player class to avoid code duplication. However, I reverted this approach. Depending on future requirements, I might reintroduce these methods as metaprogrammed functions.
+
+Removing CsvHelper.Validate means we'll need to manually check if the name property in the Player class is not empty.
+
+Currently, my code only saves the age, elo, and name headers. It might be beneficial to store any additional data in the Player class.
+
 # Approach Logic
 After parsing the file to ensure there were no issues,
 
