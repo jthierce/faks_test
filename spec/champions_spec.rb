@@ -75,7 +75,7 @@ describe Champions do
       end
     end
 
-    context 'when we have no players' do
+    context 'when no player is supplied' do
       let(:players) { [] }
 
       it 'return empty output' do
@@ -91,7 +91,7 @@ describe Champions do
         ]
       }
 
-      it 'return all the thied players' do
+      it 'return all the tied players' do
         expect(champions.to_s).to eq(<<~OUTPUT.strip
           name, age, elo
           Magnus Carlsen, 24, 2882
