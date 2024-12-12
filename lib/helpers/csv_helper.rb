@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require_relative '../../config/variables'
 
 class CsvHelperError < StandardError;end
 
