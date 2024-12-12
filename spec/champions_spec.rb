@@ -1,13 +1,28 @@
 # frozen_string_literal: true
 
 require_relative '../lib/champions'
-require_relative '../lib/player_manager'
-require_relative '../lib/helpers/csv_helper'
-
+require_relative '../lib/player'
 
 describe Champions do
-  describe '.list' do
-    let(:champions) {Champions.new(players) }
+  describe '.initialize' do
+    context 'with a array of player' do
+      let(:players) {
+        [
+          Player.new(name: 'Sebatien Toto', age: 28, elo: 1000),
+          Player.new(name: 'Magnus Carlsen', age: 34, elo: 2882)
+        ]
+      }
+
+      it 'return a instance of champions with data filled' do
+        allow_any_instance_of(Champions).to receive(:extract_champions_from_players_list).and_call_original
+        champions = Champions.new(players)
+        expect(champions.list).to all(be_an_instance_of(Player))
+      end
+    end
+  end
+
+  describe '.to_s' do
+    let(:champions) { Champions.new(players) }
 
     context 'when player does not have the same age or elo' do
       let(:players) {
