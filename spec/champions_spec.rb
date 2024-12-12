@@ -14,7 +14,7 @@ describe Champions do
       }
 
       it 'return a instance of champions with data filled' do
-        allow_any_instance_of(Champions).to receive(:extract_champions_from_players_list).and_call_original
+        expect_any_instance_of(Champions).to receive(:extract_champions_from_players_list).and_call_original
         champions = Champions.new(players)
         expect(champions.list).to all(be_an_instance_of(Player))
       end
