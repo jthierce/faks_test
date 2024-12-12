@@ -45,4 +45,22 @@ describe CsvHelper do
       end
     end
   end
+
+  describe 'read' do
+    context 'give a invalide file path' do
+      it 'raise a CsvHelperError with message invalid file path' do
+        expect { CsvHelper.read('path_not_good') }.to raise_error(CsvHelperError) do |e|
+          expect(e.message).to eq('Invalid file path')
+        end
+      end
+    end
+
+    context 'give a valid file path' do
+      let(:file_path) { "#{players_file_path}/basic_players.csv" }
+
+      it 'return array with the valid structure csv' do
+        expect(CsvHelper.read(file_path)).to eq(CSV.read(file_path, headers: true, header_converters: :downcase))
+      end
+    end
+  end
 end
