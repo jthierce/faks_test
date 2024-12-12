@@ -4,7 +4,7 @@ require 'csv'
 require_relative '../../lib/helpers/csv_helper'
 
 describe CsvHelper do
-  let(:players_file_path) { 'players_files' }
+  let(:players_file_path) { 'spec/fixtures/players_files' }
 
   describe '#validate' do
     context 'when the CSV file contains a row with missing data' do

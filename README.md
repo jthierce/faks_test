@@ -4,7 +4,7 @@ Faks technical test
 # Usage
 `ruby main.rb --help`
 
-You can find file for test in the folder players_files
+You can find file for test in the folder spec/fixtures/players_files
 
 You can use the script in script/generate_players_files.rb to create players_files with many players line. ex: `ruby script/generate_players_files.rb 6000`
 

@@ -20,6 +20,6 @@ number_of_lines.to_i.times do |i|
   file_structure << [pseudo_enum.next, rand(3..109), rand(100..3800)].join(',')
 end
 
-file = File.open("players_files/#{Time.now}_generate_players_files.csv", 'w')
+file = File.open("spec/fixtures/players_files/#{Time.now}_generate_players_files.csv", 'w')
 file.puts(file_structure.join("\n"))
 file.close
